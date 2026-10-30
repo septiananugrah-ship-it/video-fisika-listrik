@@ -1,0 +1,311 @@
+1
+00:00:01,600 --> 00:00:09,704
+Gosokkan balon ke rambut, lalu dekatkan ke dinding. Balon itu menempel, seolah ada lem yang tidak terlihat.
+
+2
+00:00:09,704 --> 00:00:15,887
+Di langit, awan badai melepaskan petir yang lebih panas dari permukaan matahari.
+
+3
+00:00:15,887 --> 00:00:22,925
+Dan di saku kita, sebuah baterai kecil mendorong elektron untuk menyalakan ponsel seharian.
+
+4
+00:00:22,925 --> 00:00:25,966
+Ketiganya digerakkan oleh satu gaya:
+
+5
+00:00:25,966 --> 00:00:27,621
+gaya listrik.
+
+6
+00:00:27,621 --> 00:00:38,255
+Gaya yang sama inilah yang mengikat elektron pada inti atom dan menyatukan atom menjadi molekul. Seluruh kimia pada dasarnya adalah listrik.
+
+7
+00:00:48,267 --> 00:00:52,174
+Video ini membahas listrik dalam tiga bagian.
+
+8
+00:00:52,174 --> 00:01:02,141
+Bagian pertama, konsep: muatan, hukum Coulomb, medan listrik, potensial, kapasitor, arus dan hambatan, serta rangkaian.
+
+9
+00:01:02,141 --> 00:01:10,565
+Bagian kedua, listrik di dunia kimia: ikatan ion, atom hidrogen, elektronvolt, dan elektrolisis.
+
+10
+00:01:10,565 --> 00:01:16,436
+Bagian ketiga, penerapan: petir, baterai, dan elektroforesis.
+
+11
+00:01:19,033 --> 00:01:28,389
+Ada dua jenis muatan listrik: positif dan negatif. Muatan sejenis tolak-menolak, muatan berlawanan tarik-menarik.
+
+12
+00:01:28,389 --> 00:01:37,345
+Muatan itu dibawa oleh partikel: proton bermuatan positif, elektron bermuatan negatif dengan besar yang persis sama.
+
+13
+00:01:37,345 --> 00:01:49,788
+Muatan terkecil ini, muatan elementer e, besarnya satu koma enam kali sepuluh pangkat minus sembilan belas coulomb. Semua muatan adalah kelipatan bulatnya.
+
+14
+00:01:49,788 --> 00:02:00,099
+Saat balon digosok, elektron berpindah dari rambut ke balon. Muatan tidak diciptakan, hanya dipindahkan: muatan total selalu kekal.
+
+15
+00:02:00,099 --> 00:02:10,544
+Balon yang bermuatan negatif mendorong elektron di permukaan dinding menjauh, sehingga dinding yang dekat menjadi sedikit positif, dan balon pun menempel.
+
+16
+00:02:13,133 --> 00:02:21,026
+Seberapa kuat gaya antara dua muatan? Charles-Augustin de Coulomb mengukurnya dengan neraca puntir.
+
+17
+00:02:21,026 --> 00:02:31,680
+Gayanya sebanding dengan hasil kali kedua muatan, dan berbanding terbalik dengan kuadrat jaraknya: F sama dengan k q satu q dua per r kuadrat.
+
+18
+00:02:31,680 --> 00:02:40,516
+Tetapan k sekitar sembilan kali sepuluh pangkat sembilan newton meter kuadrat per coulomb kuadrat. Angka yang sangat besar.
+
+19
+00:02:40,516 --> 00:02:48,431
+Jaraknya dijadikan dua kali, gayanya menjadi seperempat. Jaraknya setengah, gayanya empat kali.
+
+20
+00:02:48,431 --> 00:02:59,431
+Di dalam atom hidrogen, gaya listrik antara proton dan elektron sekitar sepuluh pangkat tiga puluh sembilan kali lebih kuat daripada gaya gravitasinya.
+
+21
+00:03:02,033 --> 00:03:11,435
+Bagaimana sebuah muatan tahu ada muatan lain di kejauhan? Faraday membayangkan setiap muatan dikelilingi medan listrik.
+
+22
+00:03:11,435 --> 00:03:21,912
+Medan listrik adalah gaya per satuan muatan: E sama dengan F per q. Muatan uji kecil di sebuah titik merasakan gaya ke arah medan.
+
+23
+00:03:21,912 --> 00:03:30,570
+Garis medan keluar dari muatan positif dan masuk ke muatan negatif. Makin rapat garisnya, makin kuat medannya.
+
+24
+00:03:30,570 --> 00:03:38,683
+Di antara dua pelat sejajar bermuatan berlawanan, garis medan lurus dan sama rapat: medannya seragam.
+
+25
+00:03:41,267 --> 00:03:49,714
+Memindahkan muatan melawan medan membutuhkan usaha, dan usaha itu tersimpan sebagai energi potensial listrik.
+
+26
+00:03:49,714 --> 00:03:59,893
+Energi potensial per satuan muatan disebut potensial listrik, V, dengan satuan volt. Satu volt sama dengan satu joule per coulomb.
+
+27
+00:03:59,893 --> 00:04:07,963
+Muatan positif mengalir dari potensial tinggi ke potensial rendah, seperti bola yang menggelinding turun bukit.
+
+28
+00:04:07,963 --> 00:04:15,778
+Yang penting bukan potensialnya sendiri, melainkan beda potensial, atau tegangan, antara dua titik.
+
+29
+00:04:18,367 --> 00:04:25,316
+Dua pelat logam yang dipisahkan sedikit celah dapat menyimpan muatan. Inilah kapasitor.
+
+30
+00:04:25,316 --> 00:04:34,294
+Muatan yang tersimpan sebanding dengan tegangannya: Q sama dengan C V. C adalah kapasitansi, dalam satuan farad.
+
+31
+00:04:34,294 --> 00:04:39,711
+Pelat yang lebih luas dan celah yang lebih sempit menyimpan lebih banyak muatan.
+
+32
+00:04:39,711 --> 00:04:49,024
+Energi tersimpan di dalam medan listrik di antara pelat, dan dapat dilepaskan dalam sekejap, seperti pada lampu kilat kamera.
+
+33
+00:04:51,633 --> 00:05:03,333
+Hubungkan dua titik yang berbeda potensial dengan kawat, dan muatan mulai mengalir. Aliran muatan per satuan waktu disebut arus listrik, I, dalam ampere.
+
+34
+00:05:03,333 --> 00:05:12,192
+Di dalam kawat logam, elektron bebas melaju zig-zag, menabrak ion-ion logam. Tabrakan inilah yang menghambat aliran.
+
+35
+00:05:12,192 --> 00:05:21,182
+Untuk banyak bahan, arus sebanding dengan tegangan: V sama dengan I R. Inilah hukum Ohm, dengan R hambatan dalam ohm.
+
+36
+00:05:21,182 --> 00:05:30,715
+Tabrakan elektron mengubah energi listrik menjadi panas. Daya yang dipakai sama dengan tegangan kali arus: P sama dengan V I.
+
+37
+00:05:30,715 --> 00:05:40,617
+Yang mengejutkan, elektron sendiri merayap sangat lambat, hanya sepersekian milimeter per detik. Yang merambat cepat adalah medannya.
+
+38
+00:05:43,233 --> 00:05:46,952
+Hambatan bisa dirangkai berderet atau bercabang.
+
+39
+00:05:46,952 --> 00:05:53,901
+Pada rangkaian seri, arusnya sama di semua hambatan, dan hambatan totalnya dijumlahkan.
+
+40
+00:05:53,901 --> 00:06:01,416
+Pada rangkaian paralel, tegangannya sama di setiap cabang, dan arus total terbagi ke cabang-cabang.
+
+41
+00:06:01,416 --> 00:06:09,964
+Lampu di rumah dirangkai paralel, sehingga setiap lampu mendapat tegangan penuh dan tetap menyala walau lampu lain padam.
+
+42
+00:06:12,567 --> 00:06:17,040
+Sekarang lihat garam dapur dengan kacamata hukum Coulomb.
+
+43
+00:06:17,040 --> 00:06:26,819
+Atom natrium menyerahkan satu elektron kepada atom klor. Hasilnya ion natrium positif dan ion klorida negatif yang saling menarik.
+
+44
+00:06:26,819 --> 00:06:35,267
+Pada jarak nol koma dua delapan nanometer, energi tarik-menarik sepasang ion itu sekitar lima elektronvolt.
+
+45
+00:06:35,267 --> 00:06:45,612
+Di dalam kristal, setiap ion dikelilingi enam ion berlawanan, dan gaya Coulomb dari seluruh kisi mengunci ion-ion itu dengan kuat.
+
+46
+00:06:45,612 --> 00:06:53,804
+Itulah sebabnya garam keras, getas, dan titik lelehnya tinggi, sekitar delapan ratus satu derajat Celsius.
+
+47
+00:06:56,400 --> 00:07:02,594
+Atom paling sederhana, hidrogen, adalah satu elektron yang ditarik satu proton.
+
+48
+00:07:02,594 --> 00:07:07,068
+Gaya Coulomb inilah yang menahan elektron di dekat inti.
+
+49
+00:07:07,068 --> 00:07:16,458
+Pada jarak sekitar nol koma nol lima tiga nanometer, energi potensial listriknya minus dua puluh tujuh koma dua elektronvolt.
+
+50
+00:07:16,458 --> 00:07:27,558
+Ditambah energi kinetik elektron, energi totalnya minus tiga belas koma enam elektronvolt, tepat energi yang dibutuhkan untuk mengionkan atom hidrogen.
+
+51
+00:07:27,558 --> 00:07:37,272
+Mengapa elektron tidak jatuh ke inti? Fisika klasik tidak bisa menjawabnya. Jawabannya baru datang dari mekanika kuantum.
+
+52
+00:07:39,867 --> 00:07:47,759
+Joule terlalu besar untuk mengukur energi satu atom. Kimiawan dan fisikawan memakai elektronvolt.
+
+53
+00:07:47,759 --> 00:08:00,100
+Satu elektronvolt adalah energi yang diperoleh satu elektron saat dipercepat beda potensial satu volt: satu koma enam kali sepuluh pangkat minus sembilan belas joule.
+
+54
+00:08:00,100 --> 00:08:08,736
+Dikali bilangan Avogadro, satu elektronvolt per partikel sama dengan sekitar sembilan puluh enam kilojoule per mol.
+
+55
+00:08:08,736 --> 00:08:20,690
+Energi ikatan kimia berkisar beberapa elektronvolt, foton cahaya tampak dua sampai tiga elektronvolt, dan energi termal suhu kamar hanya nol koma nol dua enam.
+
+56
+00:08:23,300 --> 00:08:29,306
+Listrik juga dapat memaksa reaksi kimia terjadi. Inilah elektrolisis.
+
+57
+00:08:29,306 --> 00:08:40,051
+Celupkan dua elektroda ke dalam air yang diberi elektrolit, lalu sambungkan ke baterai. Gelembung hidrogen muncul di katoda, oksigen di anoda.
+
+58
+00:08:40,051 --> 00:08:46,789
+Michael Faraday menemukan bahwa banyaknya zat yang terbentuk sebanding dengan muatan yang mengalir.
+
+59
+00:08:46,789 --> 00:08:55,425
+Satu mol elektron membawa muatan sekitar sembilan puluh enam ribu lima ratus coulomb, yang disebut tetapan Faraday.
+
+60
+00:08:55,425 --> 00:09:04,160
+Untuk menghasilkan satu mol gas hidrogen dibutuhkan dua mol elektron, sekitar seratus sembilan puluh tiga ribu coulomb.
+
+61
+00:09:06,767 --> 00:09:15,545
+Di dalam awan badai, tumbukan butir es memisahkan muatan: bagian atas menjadi positif, bagian bawah negatif.
+
+62
+00:09:15,545 --> 00:09:20,962
+Beda potensial antara awan dan tanah dapat mencapai ratusan juta volt.
+
+63
+00:09:20,962 --> 00:09:31,507
+Ketika medan listrik cukup kuat, udara terionisasi dan menjadi penghantar. Arus puluhan ribu ampere melesat dalam sepersekian detik.
+
+64
+00:09:31,507 --> 00:09:43,085
+Kanal petir memanas hingga sekitar tiga puluh ribu kelvin, lima kali lebih panas dari permukaan matahari, dan udara yang memuai mendadak menghasilkan guntur.
+
+65
+00:09:45,700 --> 00:09:53,701
+Baterai membalik elektrolisis: reaksi kimia yang berlangsung spontan mendorong elektron melalui rangkaian.
+
+66
+00:09:53,701 --> 00:10:01,594
+Pada sel Daniell, seng melepaskan elektron dan larut, sementara ion tembaga menangkap elektron dan mengendap.
+
+67
+00:10:01,594 --> 00:10:09,663
+Elektron mengalir dari seng ke tembaga lewat kawat luar, dan jembatan garam menjaga muatan larutan tetap seimbang.
+
+68
+00:10:09,663 --> 00:10:18,777
+Beda potensialnya sekitar satu koma satu volt, ditentukan oleh perbedaan kecenderungan kedua logam melepas elektron.
+
+69
+00:10:21,367 --> 00:10:27,550
+Di laboratorium biokimia, medan listrik dipakai untuk memisahkan molekul.
+
+70
+00:10:27,550 --> 00:10:35,442
+DNA bermuatan negatif, jadi dalam gel yang diberi tegangan, DNA bergerak menuju kutub positif.
+
+71
+00:10:35,442 --> 00:10:42,380
+Potongan yang pendek menyelinap lebih cepat di antara pori-pori gel, potongan yang panjang tertinggal.
+
+72
+00:10:42,380 --> 00:10:50,361
+Hasilnya pita-pita yang tersusun menurut ukuran, dipakai dalam uji forensik dan penelitian genetika.
+
+73
+00:10:52,767 --> 00:10:54,021
+Mari rangkum.
+
+74
+00:10:54,021 --> 00:11:06,476
+Muatan ada dua jenis, terkuantisasi dalam kelipatan e, dan selalu kekal. Gaya antarmuatan mengikuti hukum Coulomb, berbanding terbalik dengan kuadrat jarak.
+
+75
+00:11:06,476 --> 00:11:17,896
+Medan listrik adalah gaya per muatan, potensial adalah energi per muatan, dan beda potensial mendorong arus melalui hambatan: V sama dengan I R.
+
+76
+00:11:17,896 --> 00:11:24,268
+Kapasitor menyimpan muatan, rangkaian seri dan paralel membagi arus dan tegangan.
+
+77
+00:11:24,268 --> 00:11:35,568
+Di dunia kimia, gaya Coulomb mengikat ion dalam kristal dan elektron dalam atom, diukur dalam elektronvolt, dan menggerakkan elektrolisis serta baterai.
+
+78
+00:11:35,568 --> 00:11:45,590
+Jadi, setiap kali melihat atom berikatan atau lampu menyala, tanyakan: di mana muatannya, dan ke mana ia ingin bergerak?
