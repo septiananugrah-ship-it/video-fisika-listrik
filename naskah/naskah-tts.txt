@@ -1,0 +1,78 @@
+hook-00	Gosokkan balon ke rambut, lalu dekatkan ke dinding. Balon itu menempel, seolah ada lem yang tidak terlihat.
+hook-01	Di langit, awan badai melepaskan petir yang lebih panas dari permukaan matahari.
+hook-02	Dan di saku kita, sebuah baterai kecil mendorong elektron untuk menyalakan ponsel seharian.
+hook-03	Ketiganya digerakkan oleh satu gaya:
+hook-04	gaya listrik.
+hook-05	Gaya yang sama inilah yang mengikat elektron pada inti atom dan menyatukan atom menjadi molekul. Seluruh kimia pada dasarnya adalah listrik.
+roadmap-00	Video ini membahas listrik dalam tiga bagian.
+roadmap-01	Bagian pertama, konsep: muatan, hukum Kulom, medan listrik, potensial, kapasitor, arus dan hambatan, serta rangkaian.
+roadmap-02	Bagian kedua, listrik di dunia kimia: ikatan ion, atom hidrogen, elektronvolt, dan elektrolisis.
+roadmap-03	Bagian ketiga, penerapan: petir, baterai, dan elektroforesis.
+charge-00	Ada dua jenis muatan listrik: positif dan negatif. Muatan sejenis tolak-menolak, muatan berlawanan tarik-menarik.
+charge-01	Muatan itu dibawa oleh partikel: proton bermuatan positif, elektron bermuatan negatif dengan besar yang persis sama.
+charge-02	Muatan terkecil ini, muatan elementer e, besarnya satu koma enam kali sepuluh pangkat minus sembilan belas coulomb. Semua muatan adalah kelipatan bulatnya.
+charge-03	Saat balon digosok, elektron berpindah dari rambut ke balon. Muatan tidak diciptakan, hanya dipindahkan: muatan total selalu kekal.
+charge-04	Balon yang bermuatan negatif mendorong elektron di permukaan dinding menjauh, sehingga dinding yang dekat menjadi sedikit positif, dan balon pun menempel.
+coulomb-00	Seberapa kuat gaya antara dua muatan? Charles-Augustin de Kulom mengukurnya dengan neraca puntir.
+coulomb-01	Gayanya sebanding dengan hasil kali kedua muatan, dan berbanding terbalik dengan kuadrat jaraknya: ef sama dengan ka q satu q dua per er kuadrat.
+coulomb-02	Tetapan ka sekitar sembilan kali sepuluh pangkat sembilan newton meter kuadrat per coulomb kuadrat. Angka yang sangat besar.
+coulomb-03	Jaraknya dijadikan dua kali, gayanya menjadi seperempat. Jaraknya setengah, gayanya empat kali.
+coulomb-04	Di dalam atom hidrogen, gaya listrik antara proton dan elektron sekitar sepuluh pangkat tiga puluh sembilan kali lebih kuat daripada gaya gravitasinya.
+field-00	Bagaimana sebuah muatan tahu ada muatan lain di kejauhan? Faradei membayangkan setiap muatan dikelilingi medan listrik.
+field-01	Medan listrik adalah gaya per satuan muatan: E sama dengan ef per q. Muatan uji kecil di sebuah titik merasakan gaya ke arah medan.
+field-02	Garis medan keluar dari muatan positif dan masuk ke muatan negatif. Makin rapat garisnya, makin kuat medannya.
+field-03	Di antara dua pelat sejajar bermuatan berlawanan, garis medan lurus dan sama rapat: medannya seragam.
+potential-00	Memindahkan muatan melawan medan membutuhkan usaha, dan usaha itu tersimpan sebagai energi potensial listrik.
+potential-01	Energi potensial per satuan muatan disebut potensial listrik, fe, dengan satuan volt. Satu volt sama dengan satu jul per coulomb.
+potential-02	Muatan positif mengalir dari potensial tinggi ke potensial rendah, seperti bola yang menggelinding turun bukit.
+potential-03	Yang penting bukan potensialnya sendiri, melainkan beda potensial, atau tegangan, antara dua titik.
+capacitor-00	Dua pelat logam yang dipisahkan sedikit celah dapat menyimpan muatan. Inilah kapasitor.
+capacitor-01	Muatan yang tersimpan sebanding dengan tegangannya: ki sama dengan C fe. C adalah kapasitansi, dalam satuan farad.
+capacitor-02	Pelat yang lebih luas dan celah yang lebih sempit menyimpan lebih banyak muatan.
+capacitor-03	Energi tersimpan di dalam medan listrik di antara pelat, dan dapat dilepaskan dalam sekejap, seperti pada lampu kilat kamera.
+current-00	Hubungkan dua titik yang berbeda potensial dengan kawat, dan muatan mulai mengalir. Aliran muatan per satuan waktu disebut arus listrik, I, dalam ampere.
+current-01	Di dalam kawat logam, elektron bebas melaju zig-zag, menabrak ion-ion logam. Tabrakan inilah yang menghambat aliran.
+current-02	Untuk banyak bahan, arus sebanding dengan tegangan: fe sama dengan I R. Inilah hukum Om, dengan R hambatan dalam ohm.
+current-03	Tabrakan elektron mengubah energi listrik menjadi panas. Daya yang dipakai sama dengan tegangan kali arus: pe sama dengan fe I.
+current-04	Yang mengejutkan, elektron sendiri merayap sangat lambat, hanya sepersekian milimeter per detik. Yang merambat cepat adalah medannya.
+circuits-00	Hambatan bisa dirangkai berderet atau bercabang.
+circuits-01	Pada rangkaian seri, arusnya sama di semua hambatan, dan hambatan totalnya dijumlahkan.
+circuits-02	Pada rangkaian paralel, tegangannya sama di setiap cabang, dan arus total terbagi ke cabang-cabang.
+circuits-03	Lampu di rumah dirangkai paralel, sehingga setiap lampu mendapat tegangan penuh dan tetap menyala walau lampu lain padam.
+ionic-00	Sekarang lihat garam dapur dengan kacamata hukum Kulom.
+ionic-01	Atom natrium menyerahkan satu elektron kepada atom klor. Hasilnya ion natrium positif dan ion klorida negatif yang saling menarik.
+ionic-02	Pada jarak nol koma dua delapan nanometer, energi tarik-menarik sepasang ion itu sekitar lima elektronvolt.
+ionic-03	Di dalam kristal, setiap ion dikelilingi enam ion berlawanan, dan gaya Kulom dari seluruh kisi mengunci ion-ion itu dengan kuat.
+ionic-04	Itulah sebabnya garam keras, getas, dan titik lelehnya tinggi, sekitar delapan ratus satu derajat Selsius.
+hydrogen-00	Atom paling sederhana, hidrogen, adalah satu elektron yang ditarik satu proton.
+hydrogen-01	Gaya Kulom inilah yang menahan elektron di dekat inti.
+hydrogen-02	Pada jarak sekitar nol koma nol lima tiga nanometer, energi potensial listriknya minus dua puluh tujuh koma dua elektronvolt.
+hydrogen-03	Ditambah energi kinetik elektron, energi totalnya minus tiga belas koma enam elektronvolt, tepat energi yang dibutuhkan untuk mengionkan atom hidrogen.
+hydrogen-04	Mengapa elektron tidak jatuh ke inti? Fisika klasik tidak bisa menjawabnya. Jawabannya baru datang dari mekanika kuantum.
+ev-00	Jul terlalu besar untuk mengukur energi satu atom. Kimiawan dan fisikawan memakai elektronvolt.
+ev-01	Satu elektronvolt adalah energi yang diperoleh satu elektron saat dipercepat beda potensial satu volt: satu koma enam kali sepuluh pangkat minus sembilan belas jul.
+ev-02	Dikali bilangan Avogadro, satu elektronvolt per partikel sama dengan sekitar sembilan puluh enam kilojul per mol.
+ev-03	Energi ikatan kimia berkisar beberapa elektronvolt, foton cahaya tampak dua sampai tiga elektronvolt, dan energi termal suhu kamar hanya nol koma nol dua enam.
+electrolysis-00	Listrik juga dapat memaksa reaksi kimia terjadi. Inilah elektrolisis.
+electrolysis-01	Celupkan dua elektroda ke dalam air yang diberi elektrolit, lalu sambungkan ke baterai. Gelembung hidrogen muncul di katoda, oksigen di anoda.
+electrolysis-02	Michael Faradei menemukan bahwa banyaknya zat yang terbentuk sebanding dengan muatan yang mengalir.
+electrolysis-03	Satu mol elektron membawa muatan sekitar sembilan puluh enam ribu lima ratus coulomb, yang disebut tetapan Faradei.
+electrolysis-04	Untuk menghasilkan satu mol gas hidrogen dibutuhkan dua mol elektron, sekitar seratus sembilan puluh tiga ribu coulomb.
+lightning-00	Di dalam awan badai, tumbukan butir es memisahkan muatan: bagian atas menjadi positif, bagian bawah negatif.
+lightning-01	Beda potensial antara awan dan tanah dapat mencapai ratusan juta volt.
+lightning-02	Ketika medan listrik cukup kuat, udara terionisasi dan menjadi penghantar. Arus puluhan ribu ampere melesat dalam sepersekian detik.
+lightning-03	Kanal petir memanas hingga sekitar tiga puluh ribu kelvin, lima kali lebih panas dari permukaan matahari, dan udara yang memuai mendadak menghasilkan guntur.
+battery-00	Baterai membalik elektrolisis: reaksi kimia yang berlangsung spontan mendorong elektron melalui rangkaian.
+battery-01	Pada sel Daniel, seng melepaskan elektron dan larut, sementara ion tembaga menangkap elektron dan mengendap.
+battery-02	Elektron mengalir dari seng ke tembaga lewat kawat luar, dan jembatan garam menjaga muatan larutan tetap seimbang.
+battery-03	Beda potensialnya sekitar satu koma satu volt, ditentukan oleh perbedaan kecenderungan kedua logam melepas elektron.
+electrophoresis-00	Di laboratorium biokimia, medan listrik dipakai untuk memisahkan molekul.
+electrophoresis-01	DNA bermuatan negatif, jadi dalam gel yang diberi tegangan, DNA bergerak menuju kutub positif.
+electrophoresis-02	Potongan yang pendek menyelinap lebih cepat di antara pori-pori gel, potongan yang panjang tertinggal.
+electrophoresis-03	Hasilnya pita-pita yang tersusun menurut ukuran, dipakai dalam uji forensik dan penelitian genetika.
+recap-00	Mari rangkum.
+recap-01	Muatan ada dua jenis, terkuantisasi dalam kelipatan e, dan selalu kekal. Gaya antarmuatan mengikuti hukum Kulom, berbanding terbalik dengan kuadrat jarak.
+recap-02	Medan listrik adalah gaya per muatan, potensial adalah energi per muatan, dan beda potensial mendorong arus melalui hambatan: fe sama dengan I R.
+recap-03	Kapasitor menyimpan muatan, rangkaian seri dan paralel membagi arus dan tegangan.
+recap-04	Di dunia kimia, gaya Kulom mengikat ion dalam kristal dan elektron dalam atom, diukur dalam elektronvolt, dan menggerakkan elektrolisis serta baterai.
+recap-05	Jadi, setiap kali melihat atom berikatan atau lampu menyala, tanyakan: di mana muatannya, dan ke mana ia ingin bergerak?
