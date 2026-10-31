@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
 import {EASE_IN_OUT, cyc, ramp, rand} from '../anim';
-import {Glow, Motes, Spark, Stage, Twinkles} from '../components/primitives';
+import {Glow, Motes, Spark, Stage, Twinkles, pointAlong} from '../components/primitives';
 import {BRAND} from '../brand';
 import {useScene} from '../SceneContext';
 import {C, FONT, type Hue} from '../theme';
@@ -15,14 +15,14 @@ const REFS = [
   'RPS Fisika Umum S1 Kimia UNESA (listrik statis dan dinamis)',
 ];
 
-// butir yang mengorbit logo (warna = kode warna termofisika: panas merah, kalor jingga, entropi emas, usaha hijau, energi dalam ungu, dingin biru)
+// butir yang mengorbit logo (warna = kode warna listrik: + merah, − biru, medan kuning, potensial ungu, arus toska, ion hijau)
 const ORBIT: {hue: Hue; ph: number}[] = [
   {hue: 'heat', ph: 0},
-  {hue: 'kin', ph: 1.05},
-  {hue: 'gold', ph: 2.09},
-  {hue: 'work', ph: 3.14},
+  {hue: 'force', ph: 1.05},
+  {hue: 'pot', ph: 2.09},
+  {hue: 'cyan', ph: 3.14},
   {hue: 'spr', ph: 4.19},
-  {hue: 'pot', ph: 5.24},
+  {hue: 'work', ph: 5.24},
 ];
 const OC = {x: 960, y: 188, rx: 190, ry: 48, tilt: -14, sp: 0.5};
 
@@ -34,86 +34,127 @@ const orbitPt = (a: number): [number, number] => {
   return [OC.x + ex * c - ey * s, OC.y + ex * s + ey * c];
 };
 
-const tri = (u: number) => 1 - Math.abs(2 * (((u % 1) + 1) % 1) - 1); // pantulan dinding, kontinu
+const fr = (v: number) => ((v % 1) + 1) % 1;
 
-/** Motif kiri: balok panas & balok dingin dihubungkan batang; butir kalor jingga mengalir panas → dingin. */
-const HotCold: React.FC<{x: number; y: number; t: number; opacity: number}> = ({x, y, t, opacity}) => {
+/** Busur garis medan 2D dari + (kiri) ke − (kanan): lingkaran melalui kedua muatan, tonjolan h (positif = ke atas). */
+const fieldArc = (x1: number, x2: number, y0: number, h: number, n = 26): [number, number][] => {
+  const a = (x2 - x1) / 2;
+  const mx = (x1 + x2) / 2;
+  const hh = Math.abs(h);
+  const sg = h >= 0 ? 1 : -1;
+  const r = (a * a + hh * hh) / (2 * hh);
+  const cy = r - hh; // pusat relatif terhadap y0 (ke bawah untuk busur atas)
+  const p1 = Math.atan2(-cy, -a);
+  let p2 = Math.atan2(-cy, a);
+  while (p2 <= p1) p2 += Math.PI * 2;
+  return Array.from({length: n + 1}, (_, i) => {
+    const f = p1 + ((p2 - p1) * i) / n;
+    return [mx + r * Math.cos(f), y0 + sg * (cy + r * Math.sin(f))];
+  });
+};
+
+/** Motif kiri: pasangan + dan − dengan garis medan hidup (butir kuning mengalir dari + ke −). */
+const ChargePair: React.FC<{x: number; y: number; t: number; opacity: number}> = ({x, y, t, opacity}) => {
   if (opacity <= 0.001) return null;
-  const by = y - 120;
+  const cy = y - 130;
+  const x1 = x + 40;
+  const x2 = x + 210;
+  const breathe = 1 + 0.06 * Math.sin(t * 1.4);
+  const arcs = [26, 60, 110, -26, -60, -110].map((h) => fieldArc(x1 + 16, x2 - 16, cy, h * breathe));
   return (
     <g opacity={opacity}>
-      <Glow x={x + 40} y={by} r={120} color="heat" opacity={0.45} />
-      <Glow x={x + 210} y={by} r={110} color="pot" opacity={0.4} />
-      {/* udara panas bergetar di atas balok panas */}
-      {[0, 1, 2].map((k) => {
-        const p = (((t * 0.4 + k / 3) % 1) + 1) % 1;
-        const pts: string[] = [];
-        for (let i = 0; i <= 10; i++) {
-          const yy = by - 60 - i * 7 - p * 30;
-          pts.push(`${(x + 22 + k * 18 + 4 * Math.sin(i * 0.9 + t * 3 + k)).toFixed(1)},${yy.toFixed(1)}`);
-        }
-        return <polyline key={k} points={pts.join(' ')} fill="none" stroke={C.heat} strokeWidth={2} opacity={cyc(p) * 0.6} />;
-      })}
-      <rect x={x} y={by - 52} width={80} height={104} rx={12} fill={C.heat} fillOpacity={0.3} stroke={C.heat} strokeWidth={2.5} />
-      <rect x={x + 170} y={by - 52} width={80} height={104} rx={12} fill={C.pot} fillOpacity={0.3} stroke={C.pot} strokeWidth={2.5} />
-      {Array.from({length: 5}, (_, i) => (
-        <circle key={i} cx={x + 184 + (i % 3) * 24} cy={by - 36 + Math.floor(i / 3) * 70} r={2} fill="#e6f4ff" opacity={0.5 + 0.4 * Math.sin(t * 2 + i)} />
+      <Glow x={x1} y={cy} r={110} color="heat" opacity={0.45} />
+      <Glow x={x2} y={cy} r={110} color="pot" opacity={0.45} />
+      <line x1={x1 + 18} y1={cy} x2={x2 - 18} y2={cy} stroke={C.force} strokeWidth={2} strokeOpacity={0.55} strokeDasharray="6 9" strokeDashoffset={-t * 30} />
+      {arcs.map((pts, k) => (
+        <g key={k}>
+          <polyline points={pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ')} fill="none" stroke={C.force} strokeWidth={2} strokeOpacity={0.5} strokeDasharray="6 9" strokeDashoffset={-t * 30} />
+          {[0, 1].map((j) => {
+            const p = fr(t * 0.35 + j / 2 + k * 0.17);
+            const [px, py] = pointAlong(pts, p);
+            return (
+              <g key={j} opacity={cyc(p)}>
+                <circle cx={px} cy={py} r={9} fill="url(#soft-force)" />
+                <circle cx={px} cy={py} r={3.2} fill={C.force} />
+              </g>
+            );
+          })}
+        </g>
       ))}
-      <rect x={x + 80} y={by - 9} width={90} height={18} rx={4} fill="#3c4c84" stroke="#6a7bb8" strokeWidth={1.5} />
-      {Array.from({length: 4}, (_, i) => {
-        const p = (((t * 0.55 + i / 4) % 1) + 1) % 1;
+      {[
+        {cx: x1, pos: true},
+        {cx: x2, pos: false},
+      ].map(({cx, pos}) => (
+        <g key={cx}>
+          <circle cx={cx} cy={cy} r={20 + 1.5 * Math.sin(t * 2 + cx)} fill={pos ? C.heat : C.pot} fillOpacity={0.35} stroke={pos ? C.heat : C.pot} strokeWidth={2.5} />
+          <line x1={cx - 9} y1={cy} x2={cx + 9} y2={cy} stroke="#fff" strokeWidth={3} strokeLinecap="round" />
+          {pos ? <line x1={cx} y1={cy - 9} x2={cx} y2={cy + 9} stroke="#fff" strokeWidth={3} strokeLinecap="round" /> : null}
+        </g>
+      ))}
+      <text x={x + 125} y={cy + 105} textAnchor="middle" fontFamily={FONT.mono} fontSize={18} fill={C.force}>
+        medan: + → −
+      </text>
+      <rect x={x - 6} y={y - 4} width={262} height={10} rx={4} fill="#26305a" stroke="#5b6a9e" strokeWidth={2} />
+    </g>
+  );
+};
+
+/** Motif kanan: rangkaian kecil (baterai, lampu), elektron biru mengalir − → +, arus toska berlawanan. */
+const CIRC = (x: number, y: number): [number, number][] => [
+  [x + 30, y - 60],
+  [x + 30, y - 220],
+  [x + 220, y - 220],
+  [x + 220, y - 60],
+  [x + 30, y - 60],
+];
+const Circuit: React.FC<{x: number; y: number; t: number; opacity: number}> = ({x, y, t, opacity}) => {
+  if (opacity <= 0.001) return null;
+  const loop = CIRC(x, y);
+  const lamp = 0.8 + 0.2 * Math.sin(t * 2.6);
+  // baterai di sisi bawah (x+125, y−60): pelat panjang (+) kanan, pendek (−) kiri
+  const bx = x + 125;
+  const by = y - 60;
+  // lampu di sisi atas
+  const lx = x + 125;
+  const ly = y - 220;
+  return (
+    <g opacity={opacity}>
+      <Glow x={lx} y={ly} r={120} color="kin" opacity={0.5 * lamp} />
+      <polyline points={loop.map((p) => p.join(',')).join(' ')} fill="none" stroke="#8b9ad0" strokeWidth={3} strokeLinejoin="round" />
+      <rect x={bx - 20} y={by - 22} width={40} height={44} fill="#0d1430" />
+      <line x1={bx + 9} y1={by - 22} x2={bx + 9} y2={by + 22} stroke={C.heat} strokeWidth={4} />
+      <line x1={bx - 9} y1={by - 12} x2={bx - 9} y2={by + 12} stroke={C.pot} strokeWidth={6} />
+      <text x={bx + 26} y={by - 30} textAnchor="middle" fontFamily={FONT.head} fontWeight={700} fontSize={18} fill={C.heat}>
+        +
+      </text>
+      <text x={bx - 26} y={by - 30} textAnchor="middle" fontFamily={FONT.head} fontWeight={700} fontSize={18} fill={C.pot}>
+        −
+      </text>
+      <circle cx={lx} cy={ly} r={22} fill="#1a2550" stroke="#dfe7ff" strokeWidth={2.5} />
+      <circle cx={lx} cy={ly} r={18} fill={C.kin} opacity={0.6 * lamp} />
+      <path d={`M${lx - 12},${ly + 6} L${lx - 6},${ly - 8} L${lx},${ly + 4} L${lx + 6},${ly - 8} L${lx + 12},${ly + 6}`} fill="none" stroke="#fff4d6" strokeWidth={2.2} />
+      {/* elektron: keluar dari kutub − (kiri baterai) → kiri → atas → kanan → kembali ke + */}
+      {Array.from({length: 10}, (_, i) => {
+        const p = fr(t * 0.12 + i / 10);
+        // loop dimulai di pojok kiri-bawah; elektron dari − bergerak ke kiri lalu naik: urutan loop terbalik dimulai dari bawah-tengah
+        const [ex, ey] = pointAlong([[bx - 22, by], [x + 30, by], [x + 30, y - 220], [x + 220, y - 220], [x + 220, by], [bx + 22, by]], p);
         return (
           <g key={i} opacity={cyc(p)}>
-            <circle cx={x + 84 + p * 82} cy={by} r={12} fill="url(#soft-kin)" />
-            <circle cx={x + 84 + p * 82} cy={by} r={4.5} fill={C.kin} />
+            <circle cx={ex} cy={ey} r={10} fill="url(#soft-pot)" />
+            <circle cx={ex} cy={ey} r={4.5} fill={C.pot} />
           </g>
         );
       })}
-      <text x={x + 40} y={by + 82} textAnchor="middle" fontFamily={FONT.mono} fontSize={18} fill={C.heat}>
-        panas
-      </text>
-      <text x={x + 210} y={by + 82} textAnchor="middle" fontFamily={FONT.mono} fontSize={18} fill={C.pot}>
-        dingin
+      <line x1={x + 236} y1={y - 110} x2={x + 236} y2={y - 170} stroke={C.cyan} strokeWidth={3} markerEnd="url(#arrow-cyan)" />
+      <text x={x + 125} y={y - 22} textAnchor="middle" fontFamily={FONT.mono} fontSize={18} fill={C.cyan}>
+        arus + → − · e⁻ sebaliknya
       </text>
       <rect x={x - 6} y={y - 4} width={262} height={10} rx={4} fill="#26305a" stroke="#5b6a9e" strokeWidth={2} />
     </g>
   );
 };
 
-/** Motif kanan: kotak gas berpiston, molekul toska memantul acak (dinding = pantulan segitiga, kontinu). */
-const GasBox: React.FC<{x: number; y: number; t: number; opacity: number}> = ({x, y, t, opacity}) => {
-  if (opacity <= 0.001) return null;
-  const pis = y - 214 + 10 * Math.sin(t * 1.1);
-  const bot = y - 26;
-  return (
-    <g opacity={opacity}>
-      <Glow x={x + 125} y={y - 110} r={160} color="cyan" opacity={0.3} />
-      <Glow x={x + 125} y={bot} r={90} color="kin" opacity={0.45} />
-      <path d={`M${x + 20},${y - 236} L${x + 20},${bot} L${x + 230},${bot} L${x + 230},${y - 236}`} fill="none" stroke="#8b9ad0" strokeWidth={3} />
-      <rect x={x + 24} y={pis + 12} width={202} height={bot - pis - 14} fill={C.cyan} opacity={0.06} />
-      <rect x={x + 22} y={pis} width={206} height={12} rx={3} fill="#9fb0e6" />
-      <line x1={x + 125} y1={pis} x2={x + 125} y2={pis - 30} stroke="#9fb0e6" strokeWidth={6} />
-      {Array.from({length: 14}, (_, i) => {
-        const xx = x + 32 + 186 * tri(t * (0.35 + 0.3 * rand(i)) + rand(i * 3.7));
-        const yy = pis + 22 + (bot - pis - 34) * tri(t * (0.3 + 0.3 * rand(i * 5.3)) + rand(i * 7.1));
-        return (
-          <g key={i}>
-            <circle cx={xx} cy={yy} r={10} fill="url(#soft-cyan)" />
-            <circle cx={xx} cy={yy} r={5} fill={C.cyan} />
-          </g>
-        );
-      })}
-      {[0, 1, 2].map((k) => {
-        const h = (16 + 5 * Math.sin(t * 11 + k * 2)) * (k === 1 ? 1.3 : 1);
-        const cx = x + 95 + k * 30;
-        return <path key={k} d={`M${cx - 8},${y - 8} C${cx - 8},${y - 8 - h * 0.6} ${cx},${y - 8 - h * 0.7} ${cx},${y - 8 - h} C${cx},${y - 8 - h * 0.7} ${cx + 8},${y - 8 - h * 0.6} ${cx + 8},${y - 8} Z`} fill={k === 1 ? C.kin : C.heat} opacity={0.85} />;
-      })}
-      <rect x={x - 6} y={y - 4} width={262} height={10} rx={4} fill="#26305a" stroke="#5b6a9e" strokeWidth={2} />
-    </g>
-  );
-};
-
-/** Penutup: logo SCIENTIAN, tagline, nama penyusun, rujukan, dan pil penutup seri (motif panas). */
+/** Penutup: logo SCIENTIAN, tagline, nama penyusun, rujukan, dan pil penutup seri (motif listrik). */
 export const Outro: React.FC = () => {
   const {t, dur} = useScene();
   const logo = ramp(t, 0.2, 1.6);
@@ -143,28 +184,28 @@ export const Outro: React.FC = () => {
   return (
     <AbsoluteFill style={{opacity: out}}>
       <Stage>
-        <Glow x={960} y={240} r={440} color="kin" opacity={0.3 * logo} />
-        <Glow x={960} y={188} r={200} color="heat" opacity={0.25 * logo} />
-        <Motes x={960} y={300} rx={620} ry={260} n={40} color="kin" opacity={0.45 * logo} seed={13} />
-        {/* butir hangat yang naik pelan sambil bergoyang (udara panas) */}
+        <Glow x={960} y={240} r={440} color="pot" opacity={0.3 * logo} />
+        <Glow x={960} y={188} r={200} color="cyan" opacity={0.25 * logo} />
+        <Motes x={960} y={300} rx={620} ry={260} n={40} color="cyan" opacity={0.45 * logo} seed={13} />
+        {/* muatan + dan − melayang pelan; pasangan berlawanan saling mendekat sedikit */}
         {Array.from({length: 24}, (_, k) => {
           const p = ((((t + rand(k * 3.1) * 14) / (10 + 5 * rand(k))) % 1) + 1) % 1;
-          const x0 = 60 + rand(k * 5.3) * 1800;
-          const xAt = (yy: number) => x0 + (8 + 10 * rand(k * 2.2)) * Math.sin(yy * 0.03 + k);
-          const y = 1000 - p * 900;
-          const tail = [1, 2, 3, 4, 5, 6].map((j) => `${xAt(y + j * 6).toFixed(1)},${(y + j * 6).toFixed(1)}`);
-          const warm = k % 3 !== 0;
+          const pos = k % 2 === 0;
+          const x = 60 + rand(k * 5.3) * 1800 + 10 * Math.sin(t * 0.7 + k);
+          const y = pos ? 1000 - p * 900 : 100 + p * 900;
+          const col = pos ? C.heat : C.pot;
           return (
             <g key={k} opacity={cyc(p) * 0.4 * logo}>
-              <polyline points={`${xAt(y).toFixed(1)},${y.toFixed(1)} ${tail.join(' ')}`} fill="none" stroke={warm ? '#ffd2b0' : '#cdeeff'} strokeWidth={2} strokeLinecap="round" opacity={0.6} />
-              <circle cx={xAt(y)} cy={y} r={2.4} fill="#fff" />
+              <circle cx={x} cy={y} r={7} fill="none" stroke={col} strokeWidth={1.6} />
+              <line x1={x - 3.5} y1={y} x2={x + 3.5} y2={y} stroke={col} strokeWidth={1.6} />
+              {pos ? <line x1={x} y1={y - 3.5} x2={x} y2={y + 3.5} stroke={col} strokeWidth={1.6} /> : null}
             </g>
           );
         })}
-        <path d={ellipseD} fill="none" stroke={C.kin} strokeOpacity={0.18 * orbitOn} strokeWidth={1.5} strokeDasharray="4 10" strokeDashoffset={-t * 14} />
+        <path d={ellipseD} fill="none" stroke={C.cyan} strokeOpacity={0.18 * orbitOn} strokeWidth={1.5} strokeDasharray="4 10" strokeDashoffset={-t * 14} />
         {ring(false)}
-        <HotCold x={110} y={860} t={t} opacity={0.85 * motif} />
-        <GasBox x={1560} y={860} t={t} opacity={0.85 * motif} />
+        <ChargePair x={110} y={860} t={t} opacity={0.85 * motif} />
+        <Circuit x={1560} y={860} t={t} opacity={0.85 * motif} />
         <Twinkles x={960} y={530} rx={360} ry={30} n={4} color="gold" opacity={by * 0.7} seed={17} />
       </Stage>
       <AbsoluteFill style={{alignItems: 'center', paddingTop: 70}}>
@@ -178,7 +219,7 @@ export const Outro: React.FC = () => {
             rotate: `${(1 - logo) * -20}deg`,
           }}
         />
-        <div style={{fontFamily: FONT.head, fontSize: 64, fontWeight: 700, letterSpacing: 16 + 6 * (1 - name), color: C.ink, marginTop: 4, opacity: name, textShadow: `0 0 ${18 + 8 * Math.sin(t * 1.6)}px ${C.kin}55`}}>{BRAND.channel}</div>
+        <div style={{fontFamily: FONT.head, fontSize: 64, fontWeight: 700, letterSpacing: 16 + 6 * (1 - name), color: C.ink, marginTop: 4, opacity: name, textShadow: `0 0 ${18 + 8 * Math.sin(t * 1.6)}px ${C.cyan}55`}}>{BRAND.channel}</div>
         <div style={{fontFamily: FONT.head, fontSize: 28, color: C.muted, letterSpacing: 3, marginTop: 4, opacity: name}}>
           Explore <span style={{color: C.gold}}>Science</span> with Yayan
         </div>
@@ -208,9 +249,9 @@ export const Outro: React.FC = () => {
             opacity: next,
             padding: '10px 28px',
             borderRadius: 999,
-            border: `2px solid ${C.kin}`,
+            border: `2px solid ${C.cyan}`,
             background: 'rgba(10,16,36,0.85)',
-            boxShadow: `0 0 ${16 + 12 * (0.5 + 0.5 * Math.sin(t * 2))}px ${C.kin}66`,
+            boxShadow: `0 0 ${16 + 12 * (0.5 + 0.5 * Math.sin(t * 2))}px ${C.cyan}66`,
             translate: `0px ${(1 - next) * 14}px`,
           }}
         >

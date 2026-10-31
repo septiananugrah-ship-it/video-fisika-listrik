@@ -5,281 +5,271 @@ import {Frac, Glow, Motes, Ripple, Stage, Stream, Sub, Sup, Twinkles, V, pointAl
 import {useScene} from '../SceneContext';
 import {C, FONT, type Hue} from '../theme';
 
-// Enam kartu rangkuman, masing-masing dengan animasi mini yang terus berulang (dihitung analitik):
-// suhu = gerak molekul (laju ∝ √T) · Q = mcΔT + dataran kalor laten · tiga cara perpindahan · ΔU = Q − W ·
-// entropi naik (kalor panas → dingin) · faktor Boltzmann (populasi tingkat energi bergantung kT);
-// lalu pertanyaan kunci ("dari mana kalornya, dan ke mana ia pergi?").
+// Enam kartu rangkuman listrik, masing-masing dengan animasi mini yang terus berulang (analitik):
+// muatan ± & kelipatan e · Coulomb 1/r² (panah gaya ∝ 1/r², skala sama) · medan & potensial ·
+// V = IR dengan arus mengalir (konvensional + → −, elektron sebaliknya) · kisi ion & atom H (−13,6 eV) · elektrolisis & baterai;
+// lalu pertanyaan kunci ("di mana muatannya, dan ke mana ia ingin bergerak?").
 const SW = 444;
 const SH = 64;
 
 const hex2 = (v: number) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0');
 const ph = (t: number, period: number, off = 0) => ((((t + off) / period) % 1) + 1) % 1;
-const tri = (u: number) => 1 - Math.abs(2 * (((u % 1) + 1) % 1) - 1); // gelombang segitiga (pantul dinding), kontinu
 const MONO = {fontFamily: FONT.mono, fontSize: 15, fill: C.muted} as const;
 
-/** 01 · Molekul memantul di kotak: dingin lambat, panas cepat (laju ∝ √T). */
-const MiniMol: React.FC<{t: number}> = ({t}) => {
-  const box = (x0: number, col: string, v: number, seed: number) => (
-    <g>
-      <rect x={x0} y={6} width={130} height={56} rx={8} fill={col} fillOpacity={0.08} stroke={col} strokeOpacity={0.6} strokeWidth={1.5} />
-      {Array.from({length: 6}, (_, i) => {
-        const x = x0 + 8 + 114 * tri(t * v * (0.6 + 0.5 * rand(i + seed)) + rand(i * 3 + seed));
-        const y = 14 + 40 * tri(t * v * (0.5 + 0.5 * rand(i * 7 + seed)) + rand(i * 5 + seed));
-        return <circle key={i} cx={x} cy={y} r={4.5} fill={C.cyan} />;
-      })}
-    </g>
-  );
-  return (
-    <g>
-      {box(10, C.pot, 0.18, 1)}
-      {box(160, C.heat, 0.5, 4)}
-      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.pot}>
-        dingin: lambat
-      </text>
-      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.heat}>
-        panas: cepat
-      </text>
-    </g>
-  );
-};
+/** Muatan kecil (SVG). */
+const Chg: React.FC<{x: number; y: number; pos: boolean; r?: number; o?: number}> = ({x, y, pos, r = 10, o = 1}) => (
+  <g opacity={o}>
+    <circle cx={x} cy={y} r={r * 1.9} fill={`url(#soft-${pos ? 'heat' : 'pot'})`} />
+    <circle cx={x} cy={y} r={r} fill={pos ? C.heat : C.pot} />
+    <line x1={x - r * 0.5} y1={y} x2={x + r * 0.5} y2={y} stroke="#fff" strokeWidth={2} />
+    {pos ? <line x1={x} y1={y - r * 0.5} x2={x} y2={y + r * 0.5} stroke="#fff" strokeWidth={2} /> : null}
+  </g>
+);
 
-/** 02 · Kurva pemanasan: naik (mcΔT), datar saat berubah wujud (kalor laten). */
-const HC: [number, number][] = [
-  [12, 58],
-  [70, 44],
-  [140, 44],
-  [210, 18],
-  [296, 18],
-];
-const MiniHeat: React.FC<{t: number}> = ({t}) => {
-  const q = ph(t, 4.5);
-  const [x, y] = pointAlong(HC, q);
-  return (
-    <g>
-      <polyline points={HC.map((p) => p.join(',')).join(' ')} fill="none" stroke={C.faint} strokeWidth={2} />
-      <line x1={70} y1={44} x2={140} y2={44} stroke={C.gold} strokeWidth={3.5} opacity={0.7} />
-      <line x1={210} y1={18} x2={296} y2={18} stroke={C.gold} strokeWidth={3.5} opacity={0.7} />
-      <circle cx={x} cy={y} r={12} fill="url(#soft-kin)" opacity={cyc(q)} />
-      <circle cx={x} cy={y} r={5} fill="#fff" opacity={cyc(q)} />
-      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.kin}>
-        naik: mcΔT
-      </text>
-      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.gold}>
-        datar: laten
-      </text>
-    </g>
-  );
-};
-
-/** 03 · Konduksi (batang), konveksi (arus melingkar), radiasi (gelombang). */
-const MiniTransfer: React.FC<{t: number}> = ({t}) => {
-  const wig: string[] = [];
-  for (let i = 0; i <= 30; i++) {
-    const x = 214 + i * 2.8;
-    wig.push(`${x.toFixed(1)},${(34 - 9 * Math.sin((x - t * 60) * 0.25)).toFixed(1)}`);
-  }
-  return (
-    <g>
-      <rect x={10} y={28} width={86} height={12} rx={6} fill="#3c4c84" />
-      <circle cx={14} cy={34} r={10} fill="url(#soft-heat)" />
-      {[0, 1, 2].map((i) => {
-        const q = ph(t, 1.8, i * 0.6);
-        return <circle key={i} cx={14 + q * 80} cy={34} r={4} fill={C.kin} opacity={cyc(q)} />;
-      })}
-      <ellipse cx={150} cy={34} rx={30} ry={20} fill="none" stroke={C.kin} strokeOpacity={0.3} strokeWidth={1.5} />
-      {[0, 1, 2, 3].map((i) => {
-        const a = t * 2 + (i * Math.PI) / 2;
-        return <circle key={i} cx={150 + 30 * Math.cos(a)} cy={34 - 20 * Math.sin(a)} r={4} fill={C.kin} />;
-      })}
-      <circle cx={208} cy={34} r={12} fill="url(#soft-heat)" />
-      <circle cx={208} cy={34} r={5} fill={C.heat} />
-      <polyline points={wig.join(' ')} fill="none" stroke={C.heat} strokeWidth={2.4} />
-      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.kin}>
-        padat · fluida
-      </text>
-      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.heat}>
-        ruang hampa
-      </text>
-    </g>
-  );
-};
-
-/** 04 · Hukum pertama: kalor Q masuk ke gas, sebagian jadi usaha W (piston naik), sisanya energi dalam U. */
-const MiniFirst: React.FC<{t: number}> = ({t}) => {
-  const s = Math.sin(t * 1.5);
-  const pyP = 22 - 7 * s;
-  const up = 0.5 + 0.5 * Math.cos(t * 1.5);
-  return (
-    <g>
-      <rect x={30} y={10} width={90} height={52} rx={4} fill="none" stroke={C.muted} strokeWidth={2} />
-      <rect x={32} y={pyP + 6} width={86} height={54 - pyP} fill={C.spr} opacity={0.3 + 0.12 * Math.sin(t * 3)} />
-      <rect x={32} y={pyP} width={86} height={7} rx={2} fill="#9fb0e6" />
-      <line x1={75} y1={pyP} x2={75} y2={pyP - 14} stroke={C.work} strokeWidth={3} opacity={up} markerEnd="url(#arrow-work)" />
-      {[0, 1, 2].map((i) => {
-        const q = ph(t, 1.4, i * 0.47);
-        return <circle key={i} cx={52 + i * 22} cy={74 - q * 26} r={3.5} fill={C.kin} opacity={cyc(q)} />;
-      })}
-      {/* neraca: Q → U → W */}
-      <line x1={150} y1={34} x2={196} y2={34} stroke={C.kin} strokeWidth={4} markerEnd="url(#arrow-kin)" />
-      <circle cx={226} cy={34} r={18} fill={C.spr} fillOpacity={0.25 + 0.1 * Math.sin(t * 3)} stroke={C.spr} strokeWidth={2} />
-      <text x={226} y={35} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.serif} fontStyle="italic" fontSize={18} fill={C.spr}>
-        U
-      </text>
-      <line x1={248} y1={34} x2={292} y2={34} stroke={C.work} strokeWidth={3} markerEnd="url(#arrow-work)" />
-      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.kin}>
-        Q masuk
-      </text>
-      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.work}>
-        W keluar
-      </text>
-    </g>
-  );
-};
-
-/** 05 · Kalor mengalir panas → dingin, entropi total (emas) terus naik. */
-const MiniEntropy: React.FC<{t: number}> = ({t}) => {
+/** 01 · Muatan: + dan − saling tarik; muatan datang dalam paket e (titik-titik bertambah 1e, 2e, 3e…). */
+const MiniCharge: React.FC<{t: number}> = ({t}) => {
+  const d = 34 + 10 * Math.sin(t * 1.6);
   const q = ph(t, 4);
-  const sCurve = (u: number): [number, number] => [222 + u * 76, 56 - 40 * (1 - Math.exp(-2.4 * u)) / (1 - Math.exp(-2.4))];
-  const n = 24;
-  const pts: string[] = [];
-  for (let i = 0; i <= n; i++) {
-    const [x, y] = sCurve((q * i) / n);
-    pts.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-  }
-  const [hx, hy] = sCurve(q);
   return (
     <g>
-      <rect x={10} y={12} width={56} height={44} rx={8} fill={C.heat} fillOpacity={0.3} stroke={C.heat} strokeWidth={2} />
-      <rect x={136} y={12} width={56} height={44} rx={8} fill={C.pot} fillOpacity={0.3} stroke={C.pot} strokeWidth={2} />
-      {[0, 1, 2, 3].map((i) => {
-        const p = ph(t, 1.6, i * 0.4);
-        return <circle key={i} cx={66 + p * 70} cy={34 + 6 * Math.sin(t * 3 + i)} r={4} fill={C.kin} opacity={cyc(p)} />;
+      <Chg x={80 - d} y={34} pos r={11} />
+      <Chg x={80 + d} y={34} pos={false} r={11} />
+      <line x1={80 - d + 16} y1={34} x2={80 - d + 30} y2={34} stroke={C.force} strokeWidth={2.5} markerEnd="url(#arrow-force)" />
+      <line x1={80 + d - 16} y1={34} x2={80 + d - 30} y2={34} stroke={C.force} strokeWidth={2.5} markerEnd="url(#arrow-force)" />
+      {Array.from({length: 5}, (_, i) => {
+        const o = ramp(q, 0.1 + i * 0.14, 0.18 + i * 0.14) * Math.min(1, (1 - q) * 8);
+        return <circle key={i} cx={176 + i * 24} cy={34} r={7} fill={C.pot} stroke="#e4efff" strokeWidth={1} opacity={o} />;
       })}
-      <line x1={222} y1={58} x2={302} y2={58} stroke={C.faint} strokeWidth={1.5} />
-      <line x1={222} y1={58} x2={222} y2={10} stroke={C.faint} strokeWidth={1.5} />
-      <g opacity={Math.min(1, cyc(q) * 1.2)}>
-        <polyline points={pts.join(' ')} fill="none" stroke={C.gold} strokeWidth={2.8} />
-        <circle cx={hx} cy={hy} r={10} fill="url(#soft-gold)" />
-        <circle cx={hx} cy={hy} r={3.5} fill="#fff" />
-      </g>
-      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.kin}>
-        panas → dingin
+      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.heat}>
+        lawan: tarik
       </text>
-      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.gold}>
-        S total naik
+      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.pot}>
+        q = n·e
       </text>
     </g>
   );
 };
 
-/** 06 · Faktor Boltzmann: populasi tingkat energi N ∝ e^(−E/kT); kT naik-turun pelan → tingkat atas makin/kurang terisi. */
-const MiniBoltz: React.FC<{t: number}> = ({t}) => {
-  const kT = 1.15 + 0.6 * Math.sin(t * 0.7);
-  const lv = [58, 42, 26, 10];
+/** 02 · Coulomb: jarak berubah, panah gaya ∝ 1/r² (skala sama). */
+const MiniCoulomb: React.FC<{t: number}> = ({t}) => {
+  const r = 70 + 40 * Math.sin(t * 1.1); // 30..110
+  const F = Math.min(60, (36 * 70 * 70) / (r * r) / 1.4);
+  const cx = 150;
   return (
     <g>
-      {lv.map((y, i) => {
-        const pop = 7 * Math.exp(-i / kT);
-        return (
-          <g key={i}>
-            <line x1={14} y1={y} x2={184} y2={y} stroke={C.pot} strokeWidth={2} opacity={0.8} />
-            {Array.from({length: 7}, (_, j) => (
-              <circle key={j} cx={28 + j * 22 + 1.5 * Math.sin(t * 5 + i + j)} cy={y - 5} r={4} fill={C.cyan} opacity={Math.max(0, Math.min(1, pop - j))} />
-            ))}
-          </g>
-        );
-      })}
-      <rect x={214} y={8} width={14} height={52} rx={7} fill="none" stroke={C.muted} strokeWidth={1.5} />
-      <rect x={217} y={58 - 48 * ((kT - 0.5) / 1.3)} width={8} height={48 * ((kT - 0.5) / 1.3)} rx={4} fill={C.heat} />
-      <text x={246} y={34} fontFamily={FONT.serif} fontStyle="italic" fontSize={18} fill={C.heat} dominantBaseline="central">
-        kT
+      <line x1={cx - r / 2} y1={56} x2={cx + r / 2} y2={56} stroke={C.muted} strokeWidth={1.2} strokeDasharray="3 4" />
+      <text x={cx} y={62} textAnchor="middle" fontFamily={FONT.serif} fontStyle="italic" fontSize={14} fill={C.muted}>
+        r
       </text>
-      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.pot}>
-        tingkat energi
+      <Chg x={cx - r / 2} y={30} pos r={10} />
+      <Chg x={cx + r / 2} y={30} pos r={10} />
+      <line x1={cx - r / 2 - 13} y1={30} x2={cx - r / 2 - 13 - F} y2={30} stroke={C.force} strokeWidth={3} markerEnd="url(#arrow-force)" />
+      <line x1={cx + r / 2 + 13} y1={30} x2={cx + r / 2 + 13 + F} y2={30} stroke={C.force} strokeWidth={3} markerEnd="url(#arrow-force)" />
+      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.muted}>
+        r × 2 →
       </text>
-      <text x={326} y={42} {...MONO} dominantBaseline="central">
-        T naik → atas
+      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.force}>
+        F ÷ 4
       </text>
     </g>
   );
 };
+
+/** 03 · Medan (garis kuning keluar dari +) & potensial (lingkaran ungu sepotensial); muatan uji meluncur keluar. */
+const MiniField: React.FC<{t: number}> = ({t}) => {
+  const cx = 70;
+  const cy = 34;
+  const q = ph(t, 2.4);
+  return (
+    <g>
+      {[22, 40, 58].map((r, i) => (
+        <circle key={r} cx={cx} cy={cy} r={r * (1 + 0.04 * Math.sin(t * 2 - i))} fill="none" stroke={C.spr} strokeWidth={1.5} strokeDasharray="4 4" opacity={0.6 - i * 0.12} />
+      ))}
+      {Array.from({length: 8}, (_, i) => {
+        const a = (i / 8) * Math.PI * 2;
+        return <line key={i} x1={cx + Math.cos(a) * 14} y1={cy + Math.sin(a) * 14} x2={cx + Math.cos(a) * 60} y2={cy + Math.sin(a) * 60} stroke={C.force} strokeWidth={1.6} opacity={0.65} />;
+      })}
+      <Chg x={cx} y={cy} pos r={10} />
+      <circle cx={cx + 16 + q * 150} cy={cy} r={5} fill={C.heat} opacity={cyc(q)} />
+      <line x1={cx + 24 + q * 150} y1={cy} x2={cx + 38 + q * 150} y2={cy} stroke={C.force} strokeWidth={2.5} markerEnd="url(#arrow-force)" opacity={cyc(q)} />
+      <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.force}>
+        E = gaya/q
+      </text>
+      <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.spr}>
+        V = energi/q
+      </text>
+    </g>
+  );
+};
+
+/** 04 · Rangkaian: baterai + resistor; arus konvensional (toska) + → −, elektron (biru) sebaliknya; resistor berpendar. */
+const LOOP: [number, number][] = [
+  [30, 10],
+  [250, 10],
+  [250, 58],
+  [30, 58],
+  [30, 10],
+];
+const MiniCircuit: React.FC<{t: number}> = ({t}) => (
+  <g>
+    <polyline points={LOOP.map((p) => p.join(',')).join(' ')} fill="none" stroke="#7d8fcc" strokeWidth={2.5} />
+    {/* baterai di sisi kiri: pelat panjang (+) atas */}
+    <rect x={18} y={26} width={24} height={18} fill="#0d1430" />
+    <line x1={16} y1={29} x2={44} y2={29} stroke={C.heat} strokeWidth={3} />
+    <line x1={22} y1={39} x2={38} y2={39} stroke={C.pot} strokeWidth={4} />
+    {/* resistor di atas */}
+    <rect x={110} y={2} width={60} height={16} rx={3} fill="#0d1430" />
+    <path d="M110,10 L116,3 L126,17 L136,3 L146,17 L156,3 L166,17 L170,10" fill="none" stroke={C.press} strokeWidth={2.5} strokeLinejoin="round" />
+    <circle cx={140} cy={10} r={22} fill="url(#soft-press)" opacity={0.6 + 0.3 * Math.sin(t * 3)} />
+    {Array.from({length: 6}, (_, i) => {
+      // konvensional: keluar dari + (atas baterai) → searah jarum jam di layar: (30,10) → (250,10) → ...
+      const p = ph(t, 3.2, (i / 6) * 3.2);
+      const [x, y] = pointAlong(LOOP, p);
+      return <circle key={`c${i}`} cx={x} cy={y} r={3.5} fill={C.cyan} opacity={0.9} />;
+    })}
+    {Array.from({length: 6}, (_, i) => {
+      const p = ph(t, 4.4, (i / 6) * 4.4 + 0.3);
+      const [x, y] = pointAlong(LOOP, 1 - p);
+      return <circle key={`e${i}`} cx={x} cy={y + 0} r={3} fill={C.pot} stroke="#e4efff" strokeWidth={0.8} opacity={0.85} />;
+    })}
+    <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.cyan}>
+      I: + → −
+    </text>
+    <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.pot}>
+      e⁻: − → +
+    </text>
+  </g>
+);
+
+/** 05 · Kisi ion (Na⁺ merah, Cl⁻ biru, bergetar) + atom H (elektron mengorbit proton). */
+const MiniBond: React.FC<{t: number}> = ({t}) => (
+  <g>
+    {Array.from({length: 10}, (_, i) => {
+      const c = i % 5;
+      const r = Math.floor(i / 5);
+      const pos = (c + r) % 2 === 0;
+      const x = 22 + c * 30 + 1.5 * Math.sin(t * 6 + i * 1.7);
+      const y = 20 + r * 28 + 1.5 * Math.cos(t * 5.3 + i);
+      return <circle key={i} cx={x} cy={y} r={pos ? 8 : 11} fill={pos ? C.heat : C.pot} opacity={0.9} stroke="#e4efff" strokeWidth={0.8} />;
+    })}
+    {(() => {
+      const cx = 240;
+      const cy = 34;
+      const a = t * 2.2;
+      return (
+        <g>
+          <ellipse cx={cx} cy={cy} rx={28} ry={24} fill="none" stroke={C.pot} strokeOpacity={0.35} strokeWidth={1.2} />
+          <circle cx={cx} cy={cy} r={6} fill={C.heat} />
+          <circle cx={cx + 28 * Math.cos(a)} cy={cy + 24 * Math.sin(a)} r={9} fill="url(#soft-pot)" />
+          <circle cx={cx + 28 * Math.cos(a)} cy={cy + 24 * Math.sin(a)} r={4} fill={C.pot} />
+        </g>
+      );
+    })()}
+    <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.work}>
+      kisi NaCl
+    </text>
+    <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.kin}>
+      H: −13,6 eV
+    </text>
+  </g>
+);
+
+/** 06 · Elektrolisis (gelembung di elektroda, listrik → kimia) & baterai (lampu menyala, kimia → listrik). */
+const MiniCell: React.FC<{t: number}> = ({t}) => (
+  <g>
+    <rect x={12} y={22} width={100} height={40} rx={6} fill={C.water} fillOpacity={0.2} stroke="#8fa0d8" strokeWidth={1.5} />
+    <rect x={32} y={10} width={8} height={44} fill={C.pot} />
+    <rect x={84} y={10} width={8} height={44} fill={C.heat} />
+    {Array.from({length: 6}, (_, i) => {
+      const q = ph(t, 1.6, i * 0.53);
+      const x = i % 2 ? 46 : 78;
+      return <circle key={i} cx={x + 3 * Math.sin(t * 4 + i)} cy={56 - q * 30} r={2 + q * 2.5} fill="none" stroke="#dfeaff" strokeWidth={1.2} opacity={cyc(q)} />;
+    })}
+    <rect x={150} y={22} width={44} height={40} rx={6} fill="#22305a" stroke="#8fa0d8" strokeWidth={1.5} />
+    <rect x={164} y={16} width={16} height={6} rx={2} fill="#8fa0d8" />
+    <rect x={154} y={58 - 30 * (0.6 + 0.1 * Math.sin(t))} width={36} height={30 * (0.6 + 0.1 * Math.sin(t))} rx={3} fill={C.work} opacity={0.6} />
+    <path d="M194,40 L232,40" fill="none" stroke="#7d8fcc" strokeWidth={2} />
+    <circle cx={248} cy={36} r={20} fill="url(#soft-kin)" opacity={0.6 + 0.4 * Math.sin(t * 3)} />
+    <circle cx={248} cy={36} r={11} fill={C.kin} opacity={0.75 + 0.25 * Math.sin(t * 3)} />
+    <text x={326} y={18} {...MONO} dominantBaseline="central" fill={C.work}>
+      listrik→kimia
+    </text>
+    <text x={326} y={42} {...MONO} dominantBaseline="central" fill={C.kin}>
+      kimia→listrik
+    </text>
+  </g>
+);
 
 const ITEMS: {title: string; color: string; hue: Hue; body: React.ReactNode; size?: number; Mini: React.FC<{t: number}>}[] = [
   {
-    title: 'Suhu = gerak molekul',
+    title: 'Muatan: + dan −',
+    color: C.heat,
+    hue: 'heat',
+    size: 38,
+    body: (
+      <span>
+        <V>e</V> ≈ 1,6×10<Sup>−19</Sup> C
+      </span>
+    ),
+    Mini: MiniCharge,
+  },
+  {
+    title: 'Hukum Coulomb',
+    color: C.force,
+    hue: 'force',
+    body: (
+      <span>
+        <V color={C.force}>F</V> = <Frac n={<span><V>k</V><V>q</V><Sub>1</Sub><V>q</V><Sub>2</Sub></span>} d={<span><V>r</V><Sup>2</Sup></span>} size={0.62} />
+      </span>
+    ),
+    Mini: MiniCoulomb,
+  },
+  {
+    title: 'Medan & potensial',
+    color: C.spr,
+    hue: 'spr',
+    size: 36,
+    body: (
+      <span>
+        <V color={C.force}>E</V> = <Frac n={<V>F</V>} d={<V>q</V>} size={0.62} />
+        <span style={{color: C.muted}}> · </span>
+        <V color={C.spr}>V</V> = <Frac n={<V>U</V>} d={<V>q</V>} size={0.62} />
+      </span>
+    ),
+    Mini: MiniField,
+  },
+  {
+    title: 'Arus & rangkaian',
     color: C.cyan,
     hue: 'cyan',
     body: (
       <span>
-        <V>K</V>
-        <Sub>rata-rata</Sub> = <Frac n="3" d="2" size={0.62} /> <V>k</V>
-        <V color={C.heat}>T</V>
+        <V color={C.spr}>V</V> = <V color={C.cyan}>I</V>
+        <V color={C.press}>R</V>
       </span>
     ),
-    Mini: MiniMol,
+    Mini: MiniCircuit,
   },
   {
-    title: 'Kalor & kalor laten',
-    color: C.kin,
-    hue: 'kin',
-    size: 36,
-    body: (
-      <span>
-        <V color={C.kin}>Q</V> = <V>m</V>
-        <V>c</V>Δ<V color={C.heat}>T</V>
-        <span style={{color: C.muted}}> · </span>
-        <V color={C.kin}>Q</V> = <V>m</V>
-        <V color={C.gold}>L</V>
-      </span>
-    ),
-    Mini: MiniHeat,
-  },
-  {
-    title: 'Tiga cara berpindah',
-    color: C.heat,
-    hue: 'heat',
-    size: 29,
-    body: <span style={{fontFamily: FONT.head, fontWeight: 500}}>konduksi · konveksi · radiasi</span>,
-    Mini: MiniTransfer,
-  },
-  {
-    title: 'Hukum pertama',
-    color: C.spr,
-    hue: 'spr',
-    body: (
-      <span>
-        Δ<V color={C.spr}>U</V> = <V color={C.kin}>Q</V> − <V color={C.work}>W</V>
-      </span>
-    ),
-    Mini: MiniFirst,
-  },
-  {
-    title: 'Hukum kedua & entropi',
-    color: C.gold,
-    hue: 'gold',
-    body: (
-      <span>
-        Δ<V color={C.gold}>S</V>
-        <Sub>total</Sub> ≥ 0
-      </span>
-    ),
-    Mini: MiniEntropy,
-  },
-  {
-    title: 'Faktor Boltzmann',
-    color: C.pot,
-    hue: 'pot',
+    title: 'Ikatan ion & atom H',
+    color: C.work,
+    hue: 'work',
     size: 38,
     body: (
       <span>
-        <Frac n={<span><V>N</V><Sub>2</Sub></span>} d={<span><V>N</V><Sub>1</Sub></span>} size={0.62} /> = <V>e</V>
-        <Sup>
-          −Δ<V>E</V>/<V>k</V>
-          <V color={C.heat}>T</V>
-        </Sup>
+        <V>E</V>
+        <Sub>1</Sub> = −13,6 eV
       </span>
     ),
-    Mini: MiniBoltz,
+    Mini: MiniBond,
+  },
+  {
+    title: 'Elektrolisis & baterai',
+    color: C.kin,
+    hue: 'kin',
+    size: 30,
+    body: <span style={{fontFamily: FONT.head, fontWeight: 500}}>listrik ⇄ reaksi kimia</span>,
+    Mini: MiniCell,
   },
 ];
 
@@ -289,30 +279,45 @@ const CH = 244;
 
 export const Recap: React.FC = () => {
   const {t, cue, wordOf} = useScene();
-  const starts = [cue(1), Math.max(cue(1) + 1.6, wordOf(1, 'kalor') - 0.3), cue(2), cue(3), Math.max(cue(3) + 1.6, wordOf(3, 'kedua') - 0.3), cue(4)];
-  const nextOf = (i: number) => (i < 5 ? starts[i + 1] : cue(5));
+  const starts = [
+    cue(1),
+    Math.max(cue(1) + 1.6, wordOf(1, 'coulomb') - 0.3),
+    cue(2),
+    Math.max(cue(2) + 1.6, wordOf(2, 'mendorong') - 0.3),
+    cue(4),
+    Math.max(cue(4) + 1.6, wordOf(4, 'elektrolisis') - 0.3),
+  ];
+  const nextOf = (i: number) => (i === 3 ? cue(4) : i < 5 ? starts[i + 1] : cue(5));
   const head = ramp(t, 0, 0.8);
   const q = ramp(t, cue(5) + 0.2, cue(5) + 1.2);
   const dim = 1 - 0.6 * ramp(t, cue(5), cue(5) + 1.0, EASE_IN_OUT);
-  const tA = wordOf(5, 'kalornya');
-  const tB = wordOf(5, 'pergi');
+  const tA = wordOf(5, 'muatannya');
+  const tB = wordOf(5, 'bergerak');
   const hlA = ramp(t, tA - 0.5, tA + 0.3);
-  const hlB = ramp(t, tB - 0.5, tB + 0.3);
-  // kartu yang diacu pertanyaan ikut menyala lagi: "dari mana kalornya" → kartu 2 (kalor), "ke mana ia pergi" → kartu 3 (perpindahan)
+  const hlB = ramp(t, tB - 0.6, tB + 0.3);
+  // kartu yang diacu pertanyaan menyala lagi: "di mana muatannya" → kartu 1 (muatan), "ke mana ia ingin bergerak" → kartu 3 (medan & potensial)
   const reA = hlA * (1 - 0.6 * hlB);
   const reB = hlB;
-  const reOf = (i: number) => (i === 1 ? reA : i === 2 ? reB : 0);
+  const reOf = (i: number) => (i === 0 ? reA : i === 2 ? reB : 0);
+  // baris kapasitor & rangkaian (baris 3): kartu arus berdenyut lagi
+  const capPing = win(t, cue(3), cue(4) - 0.2, 0.5, 0.6);
   return (
     <AbsoluteFill>
       <Stage>
-        <Motes x={960} y={470} rx={900} ry={330} n={36} color="kin" opacity={0.3} seed={5} />
-        {/* latar: butir hangat naik & butir dingin turun pelan */}
+        <Motes x={960} y={470} rx={900} ry={330} n={36} color="cyan" opacity={0.3} seed={5} />
+        {/* latar: muatan + dan − melayang pelan */}
         {Array.from({length: 24}, (_, k) => {
-          const hot = k % 2 === 0;
-          const p = ph(t, 9 + 5 * rand(k), rand(k * 3.3) * 14);
+          const pos = k % 2 === 0;
+          const p = ph(t, 10 + 5 * rand(k), rand(k * 3.3) * 14);
           const x = 100 + rand(k * 5.1) * 1720 + 14 * Math.sin(t * 0.8 + k);
-          const y = hot ? 880 - p * 700 : 180 + p * 700;
-          return <circle key={k} cx={x} cy={y} r={2.5 + 1.5 * rand(k + 2)} fill={hot ? C.kin : C.pot} opacity={cyc(p) * 0.35} />;
+          const y = pos ? 880 - p * 700 : 180 + p * 700;
+          return (
+            <g key={k} opacity={cyc(p) * 0.35}>
+              <circle cx={x} cy={y} r={6} fill="none" stroke={pos ? C.heat : C.pot} strokeWidth={1.5} />
+              <line x1={x - 3} y1={y} x2={x + 3} y2={y} stroke={pos ? C.heat : C.pot} strokeWidth={1.5} />
+              {pos ? <line x1={x} y1={y - 3} x2={x} y2={y + 3} stroke={C.heat} strokeWidth={1.5} /> : null}
+            </g>
+          );
         })}
         {ITEMS.map((it, i) => {
           const x = COLS[i % 3];
@@ -326,7 +331,7 @@ export const Recap: React.FC = () => {
         {ITEMS.map((it, i) => {
           const x = COLS[i % 3];
           const y = ROWS[Math.floor(i / 3)];
-          const act = win(t, starts[i], nextOf(i), 0.5, 0.6) * dim;
+          const act = Math.max(win(t, starts[i], nextOf(i), 0.5, 0.6), i === 3 ? capPing * 0.7 : 0) * dim;
           return (
             <g key={it.title}>
               <Glow x={x} y={y} r={300} color={it.hue} opacity={0.35 * act} />
@@ -334,8 +339,9 @@ export const Recap: React.FC = () => {
             </g>
           );
         })}
-        <Glow x={COLS[1]} y={ROWS[0]} r={300} color="kin" opacity={0.4 * reA} />
-        <Glow x={COLS[2]} y={ROWS[0]} r={300} color="heat" opacity={0.35 * reB} />
+        <Ripple x={COLS[0]} y={ROWS[1]} p={(t - cue(3) - 0.1) / 1.3} r={300} color="cyan" rings={2} width={2} />
+        <Glow x={COLS[0]} y={ROWS[0]} r={300} color="heat" opacity={0.4 * reA} />
+        <Glow x={COLS[2]} y={ROWS[0]} r={300} color="spr" opacity={0.4 * reB} />
         <g opacity={q}>
           <Stream
             pts={[
@@ -343,7 +349,7 @@ export const Recap: React.FC = () => {
               [140, 800],
               [190, 800],
             ]}
-            color="kin"
+            color="heat"
             n={6}
             speed={0.6}
             r={6}
@@ -355,7 +361,7 @@ export const Recap: React.FC = () => {
               [1780, 800],
               [1830, 800],
             ]}
-            color="heat"
+            color="cyan"
             n={6}
             speed={0.6}
             r={6}
@@ -363,8 +369,8 @@ export const Recap: React.FC = () => {
           />
           <Twinkles x={960} y={800} rx={620} ry={40} n={7} color="gold" seed={7} />
         </g>
-        <Ripple x={760} y={800} p={(t - tA + 0.3) / 1.4} r={260} color="kin" rings={2} />
-        <Ripple x={1360} y={800} p={(t - tB + 0.3) / 1.4} r={260} color="heat" rings={2} />
+        <Ripple x={700} y={800} p={(t - tA + 0.3) / 1.4} r={260} color="heat" rings={2} />
+        <Ripple x={1300} y={800} p={(t - tB + 0.3) / 1.4} r={260} color="cyan" rings={2} />
       </Stage>
       <div style={{position: 'absolute', left: 0, right: 0, top: 150, textAlign: 'center', fontFamily: FONT.head, fontSize: 30, letterSpacing: 8 + 2 * (1 - head), color: C.gold, fontWeight: 600, opacity: head}}>
         RANGKUMAN
@@ -374,7 +380,7 @@ export const Recap: React.FC = () => {
         const x = COLS[i % 3];
         const y = ROWS[Math.floor(i / 3)];
         const re = reOf(i);
-        const act = Math.max(win(t, starts[i], nextOf(i), 0.5, 0.6), re);
+        const act = Math.max(win(t, starts[i], nextOf(i), 0.5, 0.6), re, i === 3 ? capPing * 0.7 : 0);
         const dimI = dim + (1 - dim) * re;
         const mini = ramp(t, starts[i] + 0.4, starts[i] + 1.2);
         const bob = 3 * Math.sin(t * 1.1 + i * 1.3);
@@ -436,8 +442,8 @@ export const Recap: React.FC = () => {
           whiteSpace: 'nowrap',
         }}
       >
-        <span style={{color: C.kin, textShadow: `0 0 ${26 * hlA}px ${C.kin}aa`}}>Dari mana kalornya</span>, dan{' '}
-        <span style={{color: C.heat, textShadow: `0 0 ${26 * hlB}px ${C.heat}aa`}}>ke mana ia pergi</span>?
+        <span style={{color: C.heat, textShadow: `0 0 ${26 * hlA}px ${C.heat}aa`}}>Di mana muatannya</span>, dan{' '}
+        <span style={{color: C.cyan, textShadow: `0 0 ${26 * hlB}px ${C.cyan}aa`}}>ke mana ia ingin bergerak</span>?
       </div>
     </AbsoluteFill>
   );
