@@ -62,7 +62,7 @@ export const EV: React.FC = () => {
   const eOp = Math.min(1, ph * 10) * (1 - ramp(ph, 0.88, 1));
   const eTrail = s > 0.05 && ph < 0.9 ? Array.from({length: 6}, (_, k) => [mix(XM + 30, XP - 30, Math.max(0, s - 0.03 * (k + 1)) ** 2), YE] as [number, number]) : undefined;
   const hitP = ph >= 0.88 ? (ph - 0.88) / 0.3 : (ph + 0.12) / 0.3; // riak saat tiba di pelat +
-  const vOn = ramp(t, wordOf(1, 'volt') - 0.4, wordOf(1, 'volt') + 0.4);
+  const vOn = ramp(t, wordOf(1, 'volt', 1) - 0.4, wordOf(1, 'volt', 1) + 0.4);
   const card1 = slot(t, wordOf(1, 'koma') - 0.4, cue(2) - 0.4);
   const fieldX = (k: number) => (((XP - 60 - (t * 90 + k * 110)) % 480) + 480) % 480;
 
